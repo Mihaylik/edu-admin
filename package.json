@@ -16,5 +16,16 @@
     "url": "https://github.com/Mihaylik/edu-admin/issues"
   },
   "homepage": "https://github.com/Mihaylik/edu-admin#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^6.10.1"
+  }
 }
