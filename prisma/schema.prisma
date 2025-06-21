@@ -8,55 +8,55 @@ datasource db {
 }
 
 model User {
-  id         Int              @id @default(autoincrement())
-  email      String           @unique
-  password   String
-  role       String
-  createdAt  DateTime         @default(now())
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String
+  createdAt DateTime @default(now())
 
   // Relations
-  coursesTaught Course[]      @relation("TeacherCourses")
-  studentCourses StudentCourse[]
+  coursesTaught    Course[]        @relation("TeacherCourses")
+  studentCourses   StudentCourse[]
   groupMemberships GroupMember[]
 }
 
 model Subject {
-  id    Int     @id @default(autoincrement())
-  name  String
+  id      Int      @id @default(autoincrement())
+  name    String
   courses Course[]
 }
 
 model Course {
-  id         Int      @id @default(autoincrement())
-  name       String
-  subjectId  Int
-  teacherId  Int
+  id        Int    @id @default(autoincrement())
+  name      String
+  subjectId Int
+  teacherId Int
 
-  subject    Subject  @relation(fields: [subjectId], references: [id])
-  teacher    User     @relation("TeacherCourses", fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subject        Subject         @relation(fields: [subjectId], references: [id])
+  teacher        User            @relation("TeacherCourses", fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   studentCourses StudentCourse[]
 }
 
 model StudentCourse {
-  id        Int    @id @default(autoincrement())
+  id        Int @id @default(autoincrement())
   studentId Int
   courseId  Int
 
-  student User @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  course    Course @relation(fields: [courseId], references: [id])
+  student User   @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  course  Course @relation(fields: [courseId], references: [id])
 }
 
 model Group {
-  id     Int           @id @default(autoincrement())
-  name   String
+  id      Int           @id @default(autoincrement())
+  name    String
   members GroupMember[]
 }
 
 model GroupMember {
-  id       Int    @id @default(autoincrement())
-  groupId  Int
+  id        Int @id @default(autoincrement())
+  groupId   Int
   studentId Int
 
-  group     Group @relation(fields: [groupId], references: [id])
-  student   User  @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  group   Group @relation(fields: [groupId], references: [id])
+  student User  @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
