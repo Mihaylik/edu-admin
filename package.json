@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Mihaylik/edu-admin#readme",
   "description": "",
+  "type": "module",
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "bcryptjs": "^3.0.2",
@@ -27,6 +28,8 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.10.1"
+    "prisma": "^6.10.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }
