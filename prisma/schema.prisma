@@ -18,6 +18,8 @@ model User {
   coursesTaught    Course[]        @relation("TeacherCourses")
   studentCourses   StudentCourse[]
   groupMemberships GroupMember[]
+  Attendance       Attendance[]
+  Grade            Grade[]
 }
 
 model Subject {
@@ -35,6 +37,9 @@ model Course {
   subject        Subject         @relation(fields: [subjectId], references: [id])
   teacher        User            @relation("TeacherCourses", fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   studentCourses StudentCourse[]
+  Attendance     Attendance[]
+  Grade          Grade[]
+  Schedule       Schedule[]
 }
 
 model StudentCourse {
@@ -59,4 +64,37 @@ model GroupMember {
 
   group   Group @relation(fields: [groupId], references: [id])
   student User  @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  courseId  Int
+  date      DateTime
+  status    String // Наприклад: 'present', 'absent', 'late'
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+}
+
+model Grade {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  courseId  Int
+  value     Float
+  date      DateTime
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+}
+
+model Schedule {
+  id        Int     @id @default(autoincrement())
+  courseId  Int
+  dayOfWeek String // Наприклад: 'Monday', 'Tuesday'
+  startTime String // '09:00'
+  endTime   String // '10:30'
+  location  String?
+
+  course Course @relation(fields: [courseId], references: [id])
 }
