@@ -17,7 +17,7 @@ const router = express.Router();
 router.use(authenticateToken);
 
 router.get('/', getAllSubjects);
-router.post('/', validateSubjectPayload, authorizeRole([USER_ROLES.admin]), createSubject);
+router.post('/', validateSubjectPayload, authorizeRole(USER_ROLES.admin), createSubject);
 
 router.put('/:id', validateSubjectPayload, authorizeAdminOrTeacherForCourse, updateSubject);
 router.put(

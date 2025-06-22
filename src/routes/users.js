@@ -7,12 +7,12 @@ import { validateIdParam, validateUpdateUser } from '../utils/validation.js';
 const router = express.Router();
 router.use(authenticateToken);
 
-router.post('/create', authorizeRole([USER_ROLES.admin]), createUser);
-router.post('/update/:id', authorizeRole([USER_ROLES.admin]), validateIdParam, validateUpdateUser, updateUser);
-router.put('/change-password', authenticateToken, changePassword)
+router.post('/create', authorizeRole(USER_ROLES.admin), createUser);
+router.post('/update/:id', authorizeRole(USER_ROLES.admin), validateIdParam, validateUpdateUser, updateUser);
+router.put('/change-password', changePassword)
 
 // tmp
-router.get('/dashboard', authenticateToken, authorizeRole([USER_ROLES.admin]), (req, res) => {
+router.get('/dashboard', authorizeRole(USER_ROLES.admin), (req, res) => {
   res.json({ message: 'Only admins see this' })
 })
 
