@@ -1,12 +1,15 @@
 import express from 'express';
-import { createUser } from '../controllers/userController.js';
+import { changePassword, createUser, updateUser } from '../controllers/userController.js';
 import { authenticateToken, authorizeRole } from '../middlewares/authMiddleware.js';
 import { USER_ROLES } from '../utils/roles.js';
+import { validateIdParam, validateUpdateUser } from '../utils/validation.js';
 
 const router = express.Router();
+router.use(authenticateToken);
 
-router.post('/create',  authenticateToken, authorizeRole([USER_ROLES.admin]), createUser);
-
+router.post('/create', authorizeRole([USER_ROLES.admin]), createUser);
+router.post('/update/:id', authorizeRole([USER_ROLES.admin]), validateIdParam, validateUpdateUser, updateUser);
+router.put('/change-password', authenticateToken, changePassword)
 
 // tmp
 router.get('/dashboard', authenticateToken, authorizeRole([USER_ROLES.admin]), (req, res) => {

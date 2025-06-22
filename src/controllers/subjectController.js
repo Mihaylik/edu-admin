@@ -54,3 +54,26 @@ export const deleteSubject = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete subject' })
   }
 }
+
+export const assignTeacherToSubject = async (req, res) => {
+  const { id, teacherId } = req.params
+
+  try {
+    const subject = await prisma.subject.findUnique({ where: { id: parseInt(id) } })
+    if (!subject) return res.status(404).json({ error: 'Subject not found' })
+
+    const teacher = await prisma.user.findUnique({ where: { id: parseInt(teacherId) } })
+    if (!teacher || teacher.role !== 'TEACHER') {
+      return res.status(400).json({ error: 'Invalid teacher ID or user is not a teacher' })
+    }
+
+    await prisma.course.updateMany({
+      where: { subjectId: parseInt(id) },
+      data: { teacherId: parseInt(teacherId) }
+    })
+
+    res.json({ message: 'Teacher assigned to all courses for this subject' })
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to assign teacher' })
+  }
+}
