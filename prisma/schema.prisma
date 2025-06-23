@@ -71,7 +71,7 @@ model Attendance {
   studentId Int
   courseId  Int
   date      DateTime
-  status    String // Наприклад: 'present', 'absent', 'late'
+  status    String // 'PRESENT', 'ABSENT', 'LATE'
 
   student User   @relation(fields: [studentId], references: [id])
   course  Course @relation(fields: [courseId], references: [id])
@@ -91,7 +91,7 @@ model Grade {
 model Schedule {
   id        Int     @id @default(autoincrement())
   courseId  Int
-  dayOfWeek String // Наприклад: 'Monday', 'Tuesday'
+  dayOfWeek String // 'Monday', 'Tuesday'
   startTime String // '09:00'
   endTime   String // '10:30'
   location  String?

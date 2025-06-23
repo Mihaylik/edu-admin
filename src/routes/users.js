@@ -2,6 +2,7 @@ import express from 'express';
 import {
   changePassword,
   createUser,
+  getAllUsers,
   updateUser,
 } from '../controllers/userController.js';
 import {
@@ -9,24 +10,35 @@ import {
   authorizeRole,
 } from '../middlewares/authMiddleware.js';
 import { USER_ROLES } from '../utils/roles.js';
-import { validateIdParam, validateUpdateUser } from '../utils/validation.js';
+import {
+  changePasswordSchema,
+  createUserSchema,
+  updateUserSchema,
+} from '../schemas/user.schema.js';
+import { validateBody } from '../middlewares/validatePayload.js';
 
+// Route: /users
 const router = express.Router();
+
 router.use(authenticateToken);
 
-router.post('/create', authorizeRole(USER_ROLES.admin), createUser);
+router.get('/', authorizeRole(USER_ROLES.admin), getAllUsers);
+router.post(
+  '/create',
+  authorizeRole(USER_ROLES.admin),
+  validateBody(createUserSchema),
+  createUser,
+);
 router.post(
   '/update/:id',
   authorizeRole(USER_ROLES.admin),
-  validateIdParam,
-  validateUpdateUser,
+  validateBody(updateUserSchema),
   updateUser,
 );
-router.put('/change-password', changePassword);
-
-// tmp
-router.get('/dashboard', authorizeRole(USER_ROLES.admin), (req, res) => {
-  res.json({ message: 'Only admins see this' });
-});
+router.put(
+  '/change-password',
+  validateBody(changePasswordSchema),
+  changePassword,
+);
 
 export default router;

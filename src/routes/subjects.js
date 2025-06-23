@@ -17,7 +17,17 @@ import {
 } from '../utils/validation.js';
 import { authorizeAdminOrTeacherForSubject } from '../middlewares/roleMiddleware.js';
 import { USER_ROLES } from '../utils/roles.js';
+import {
+  validateBody,
+  validateParams,
+} from '../middlewares/validatePayload.js';
+import {
+  assignTeacherToSubjectParamsSchema,
+  createSubjectSchema,
+  updateSubjectSchema,
+} from '../schemas/subject.schema.js';
 
+// Route: /subjects
 const router = express.Router();
 
 router.use(authenticateToken);
@@ -25,21 +35,21 @@ router.use(authenticateToken);
 router.get('/', getAllSubjects);
 router.post(
   '/',
-  validateSubjectPayload,
   authorizeRole(USER_ROLES.admin),
+  validateBody(createSubjectSchema),
   createSubject,
 );
 
 router.put(
   '/:id',
-  validateSubjectPayload,
   authorizeAdminOrTeacherForSubject,
+  validateBody(updateSubjectSchema),
   updateSubject,
 );
 router.put(
   '/:id/assign-teacher/:teacherId',
-  validateIdParam,
-  authorizeRole('ADMIN'),
+  authorizeRole(USER_ROLES.admin),
+  validateParams(assignTeacherToSubjectParamsSchema),
   assignTeacherToSubject,
 );
 router.delete('/:id', deleteSubject);

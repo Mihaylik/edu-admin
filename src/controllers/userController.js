@@ -1,41 +1,60 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../db/prismaClient.js';
-import { USER_ROLES } from '../utils/roles.js';
-import { validatePassword, validateUpdateUser } from '../utils/validation.js';
+import {
+  createUserSchema,
+  updateUserSchema,
+  changePasswordSchema,
+} from '../schemas/user.schema.js';
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+};
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { email, role } = req.body;
+  const parsed = updateUserSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
+  }
 
   try {
     const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    const data = {};
-    if (email) data.email = email;
-    if (role) data.role = role;
-
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(id) },
-      data,
+      data: parsed.data,
     });
+    const { password, ...updatedUserData } = updatedUser;
 
-    res.json(updatedUser);
+    res.json(updatedUserData);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update user' });
   }
 };
 
 export const createUser = async (req, res) => {
-  const { email, password, role } = req.body;
+  const parsed = createUserSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
+  }
+
+  const { email, password, role } = parsed.data;
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) return res.status(400).json({ error: 'User already exists' });
-
-  const validRoles = Object.values(USER_ROLES);
-  if (!validRoles.includes(role)) {
-    return res.status(400).json({ error: 'Invalid role' });
-  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -51,20 +70,15 @@ export const createUser = async (req, res) => {
 };
 
 export const changePassword = async (req, res) => {
-  const userId = req.user.id;
-  const { newPassword } = req.body;
+  const userId = req.user.userId;
 
-  if (validatePassword(newPassword)) {
-    return res
-      .status(400)
-      .json({
-        error:
-          'Password must be at least 8 characters long, contain one uppercase letter and one digit',
-      });
+  const parsed = changePasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(parsed.data.newPassword, 10);
 
     await prisma.user.update({
       where: { id: userId },
@@ -73,6 +87,8 @@ export const changePassword = async (req, res) => {
 
     res.json({ message: 'Password updated successfully' });
   } catch (error) {
+    console.log({ error });
+
     res.status(500).json({ error: 'Failed to update password' });
   }
 };
