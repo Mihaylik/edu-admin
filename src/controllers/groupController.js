@@ -11,9 +11,28 @@ export const getAllGroups = async (req, res) => {
       select: {
         id: true,
         name: true,
+        members: {
+          include: {
+            student: {
+              select: {
+                id: true,
+                email: true,
+                role: true,
+                createdAt: true,
+              },
+            },
+          },
+        },
       },
     });
-    res.json(groups);
+
+    const result = groups.map((group) => ({
+      id: group.id,
+      name: group.name,
+      members: group.members.map((m) => m.student),
+    }));
+
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch groups' });
   }
@@ -120,9 +139,10 @@ export const updateGroup = async (req, res) => {
     });
     if (!group) return res.status(404).json({ error: 'Group not found' });
 
-    const updateData = {};
-    if (name !== undefined) updateData.name = name;
-
+    const data = {};
+    if (name !== undefined) {
+      data.name = name;
+    }
     if (studentIds) {
       const students = await prisma.user.findMany({
         where: { id: { in: studentIds }, role: 'STUDENT' },
@@ -133,15 +153,21 @@ export const updateGroup = async (req, res) => {
           .status(400)
           .json({ error: 'One or more students not found or not STUDENT' });
       }
-      await prisma.groupMember.deleteMany({ where: { groupId: id } });
-      updateData.members = {
+      data.members = {
         create: studentIds.map((studentId) => ({ studentId })),
       };
+      await prisma.groupMember.deleteMany({ where: { groupId: id } });
     }
 
-    const updatedGroup = await prisma.group.update({
+    if (data.name || data.members) {
+      await prisma.group.update({
+        where: { id },
+        data,
+      });
+    }
+
+    const updatedGroup = await prisma.group.findUnique({
       where: { id },
-      data: updateData,
       include: {
         members: {
           include: {
@@ -179,8 +205,10 @@ export const deleteGroup = async (req, res) => {
     if (!group) return res.status(404).json({ error: 'Group not found' });
 
     await prisma.group.delete({ where: { id } });
-    res.status(204).end();
+    res.status(204).json({ message: 'Group deleted' });
   } catch (error) {
+    console.log({ error });
+
     res.status(500).json({ error: 'Failed to delete group' });
   }
 };

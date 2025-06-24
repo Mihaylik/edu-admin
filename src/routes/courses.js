@@ -71,7 +71,6 @@ router.delete(
 // fot the StudentsCourses
 router.get(
   '/:id/students',
-  // TODO: may be will accept this also for students and than remove this middleware
   authorizeAdminOrCourseTeacher,
   validateParams(studentCourseIdParamsSchema),
   getStudentsOfCourse,

@@ -92,3 +92,27 @@ export const changePassword = async (req, res) => {
     res.status(500).json({ error: 'Failed to update password' });
   }
 };
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const currentUserId = req.user.userId;
+
+  if (parseInt(id, 10) === currentUserId) {
+    return res
+      .status(400)
+      .json({ error: 'You cannot delete your own account' });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await prisma.user.delete({ where: { id: parseInt(id) } });
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+};

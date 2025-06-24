@@ -1,9 +1,7 @@
 import { prisma } from '../db/prismaClient.js';
 import { USER_ROLES } from '../utils/roles.js';
-import {
-  groupIdParamsSchema,
-  groupMemberParamsSchema,
-} from '../schemas/groupMember.schema.js';
+import { groupMemberParamsSchema } from '../schemas/groupMember.schema.js';
+import { groupIdParamsSchema } from '../schemas/group.schema.js';
 
 export const getGroupMembers = async (req, res) => {
   const parsed = groupIdParamsSchema.safeParse(req.params);

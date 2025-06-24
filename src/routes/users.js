@@ -2,6 +2,7 @@ import express from 'express';
 import {
   changePassword,
   createUser,
+  deleteUser,
   getAllUsers,
   updateUser,
 } from '../controllers/userController.js';
@@ -40,5 +41,6 @@ router.put(
   validateBody(changePasswordSchema),
   changePassword,
 );
+router.delete('/:id', authorizeRole(USER_ROLES.admin), deleteUser);
 
 export default router;

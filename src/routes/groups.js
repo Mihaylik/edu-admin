@@ -2,27 +2,30 @@ import express from 'express';
 import {
   authenticateToken,
   authorizeRole,
-} from '../middlewares/authMiddleware';
+} from '../middlewares/authMiddleware.js';
 import {
   createGroupSchema,
   groupIdParamsSchema,
   updateGroupSchema,
-} from '../schemas/group.schema';
+} from '../schemas/group.schema.js';
 import {
   createGroup,
   deleteGroup,
   getAllGroups,
   getGroupById,
   updateGroup,
-} from '../controllers/groupController';
-import { USER_ROLES } from '../utils/roles';
-import { validateParams } from '../middlewares/validatePayload';
-import { groupMemberParamsSchema } from '../schemas/groupMember.schema';
+} from '../controllers/groupController.js';
+import { USER_ROLES } from '../utils/roles.js';
+import {
+  validateBody,
+  validateParams,
+} from '../middlewares/validatePayload.js';
+import { groupMemberParamsSchema } from '../schemas/groupMember.schema.js';
 import {
   addStudentToGroup,
   getGroupMembers,
   removeStudentFromGroup,
-} from '../controllers/groupMemberController';
+} from '../controllers/groupMemberController.js';
 
 // Route: /groups
 const router = express.Router();

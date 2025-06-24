@@ -5,6 +5,10 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import subjectRoutes from './routes/subjects.js';
 import courseRoutes from './routes/courses.js';
+import groupsRoutes from './routes/groups.js';
+import gradesRoutes from './routes/grades.js';
+import schedulesRoutes from './routes/schedules.js';
+import attendanceRoutes from './routes/attendance.js';
 
 dotenv.config();
 
@@ -19,6 +23,10 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/subjects', subjectRoutes);
 app.use('/courses', courseRoutes);
+app.use('/groups', groupsRoutes);
+app.use('/grades', gradesRoutes);
+app.use('/schedules', schedulesRoutes);
+app.use('/attendances', attendanceRoutes);
 
 // global extension handler
 app.use((err, req, res, next) => {

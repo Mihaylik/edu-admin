@@ -31,10 +31,10 @@ model Subject {
 model Course {
   id        Int    @id @default(autoincrement())
   name      String
-  subjectId Int
+  subjectId Int?
   teacherId Int
 
-  subject        Subject         @relation(fields: [subjectId], references: [id])
+  subject        Subject?         @relation(fields: [subjectId], references: [id], onDelete: SetNull)
   teacher        User            @relation("TeacherCourses", fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   studentCourses StudentCourse[]
   Attendance     Attendance[]
@@ -62,7 +62,7 @@ model GroupMember {
   groupId   Int
   studentId Int
 
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group? @relation(fields: [groupId], references: [id], onDelete: Cascade)
   student User  @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -82,7 +82,7 @@ model Grade {
   studentId Int
   courseId  Int
   value     Float
-  date      DateTime
+  date      DateTime @default(now())
 
   student User   @relation(fields: [studentId], references: [id])
   course  Course @relation(fields: [courseId], references: [id])

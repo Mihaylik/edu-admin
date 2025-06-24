@@ -12,7 +12,7 @@ export const authenticateToken = (req, res, next) => {
     if (err) {
       console.log({ err });
 
-      return res.sendStatus(403);
+      return res.status(403).json({ error: 'Token expired!' });
     }
     req.user = user;
     next();

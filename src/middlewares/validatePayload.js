@@ -11,7 +11,7 @@ export const validateBody = (schema) => (req, res, next) => {
 
 export const validateParams = (schema) => (req, res, next) => {
   try {
-    req.body = schema.parse(req.params);
+    req.params = schema.parse(req.params);
     next();
   } catch (err) {
     return res
