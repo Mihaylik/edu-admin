@@ -55,7 +55,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Set SCM_DO_BUILD_DURING_DEPLOYMENT
-        uses: Azure/azure-app-service-settings@v1
+        uses: azure/appservice-settings@v1
         with:
           app-name: 'edu-admin-api'
           slot-name: 'Production'
