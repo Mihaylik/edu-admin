@@ -51,8 +51,8 @@ jobs:
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5B87BA20AD05476BBFB952A090BCC4E5 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A21F770B8FF644F29DDE535F0520A9CF }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E96576EE6A3C48699993848244C67A80 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E96576EE6A3C48699993848244C67A80 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A21F770B8FF644F29DDE535F0520A9CF }}
 
       - name: Set SCM_DO_BUILD_DURING_DEPLOYMENT
         uses: azure/appservice-settings@v1
