@@ -60,9 +60,13 @@ jobs:
           app-name: 'edu-admin-api'
           slot-name: 'Production'
           app-settings-json: |
-            {
-              "SCM_DO_BUILD_DURING_DEPLOYMENT": "true"
-            }
+            [
+              {
+                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                "value": "true",
+                "slotSetting": false
+              }
+            ]
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
