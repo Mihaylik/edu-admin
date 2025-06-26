@@ -9,6 +9,7 @@ import groupsRoutes from './routes/groups.js';
 import gradesRoutes from './routes/grades.js';
 import schedulesRoutes from './routes/schedules.js';
 import attendanceRoutes from './routes/attendance.js';
+import { setupSwagger } from './swagger.js';
 
 dotenv.config();
 
@@ -46,3 +47,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
+setupSwagger(app);
